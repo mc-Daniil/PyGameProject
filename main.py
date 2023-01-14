@@ -67,7 +67,12 @@ def draw_start_game(screen):
     :param screen:
     :return:
     """
-    screen.fill((0, 255, 0))
+    screen.fill((0, 0, 0))
+    font = pygame.font.Font(None, 30)
+    text = font.render("Пока не готово", True, (0, 255, 0))
+    x = width // 2 - text.get_width() // 2
+    y = height // 2 - text.get_height() // 2
+    screen.blit(text, (x, y))
 
 
 def draw_how_to_play(screen):
@@ -78,6 +83,11 @@ def draw_how_to_play(screen):
     :return:
     """
     screen.fill((255, 0, 0))
+    font = pygame.font.Font(None, 30)
+    text = font.render("Итак, вы оказались в школе, из которой вам нужно сбежать", True, (0, 255, 0))
+    x = width // 2 - text.get_width() // 2
+    y = height // 2 - text.get_height() // 2
+    screen.blit(text, (x, y))
 
 
 # Основа, так сказать, база, baseee
