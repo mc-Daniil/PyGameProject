@@ -1,6 +1,14 @@
 import pygame
 
 
+class Board:
+    def __init__(self):
+        self.width = width
+        self.height = height
+        self.cell_size = 50
+
+
+
 def draw_intro_screen(screen, i):
     """
     Экран - 0
@@ -145,13 +153,34 @@ def draw_how_to_play(screen):
     screen.blit(text, (x, y))
 
 
+def level_1(screen):
+    print("level 1")
+
+
+def level_2(screen):
+    print("level 2")
+
+
+def level_3(screen):
+    print("level 3")
+
+
+def level_4(screen):
+    print("level 4")
+
+
+def level_5(screen):
+    print("level 5")
+
+
 # Основа, так сказать, база, baseee
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 1000, 600
+    size = width, height = 800, 800
     screen = pygame.display.set_mode(size)
     num_of_screen = 0 # Номер экрана
     num_start_screen = 0 # Номер текста в интро
+    current_level = 1 # Текущий уровень, на котором игрок. Нельзя начать уровень после этого, пока не пройден этот
 
     running = True
     while running:
@@ -172,8 +201,21 @@ if __name__ == '__main__':
                         num_of_screen = 3
             if num_of_screen == 2: # Экран начать игру
                 x1, y1, w1, h1, x2, y2, w2, h2, x3, y3, w3, h3, x4, y4, w4, h4, x5, y5, w5, h5 = draw_start_game(screen)
-                if event.key == pygame.K_ESCAPE:
-                    num_of_screen = 1
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        num_of_screen = 1
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if x in range(x1, x1 + w1) and y in range(y1, y1 + h1):
+                        level_1(screen)
+                    elif x in range(x2, x2 + w2) and y in range(y2, y2 + h2):
+                        level_2(screen)
+                    elif x in range(x3, x3 + w3) and y in range(y3, y3 + h3):
+                        level_3(screen)
+                    elif x in range(x4, x4 + w4) and y in range(y4, y4 + h4):
+                        level_4(screen)
+                    elif x in range(x5, x5 + w5) and y in range(y5, y5 + h5):
+                        level_5(screen)
 
             if num_of_screen == 3: # Экран как играть
                 draw_how_to_play(screen)
