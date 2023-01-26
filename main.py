@@ -1,9 +1,12 @@
+import os
+import sys
+
 import pygame
 
 
 class Board:
     def __init__(self, f):
-        self.cell_size = 50
+        self.cell_size = 40
         self.board = list(open(f).readlines())
         self.width = len(self.board[0]) - 1
         self.height = len(self.board)
@@ -14,12 +17,14 @@ class Board:
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == "1":
-                    color = "white"
+                    pygame.draw.rect(screen, pygame.Color("white"),
+                                     (x * self.cell_size + self.left, y * self.cell_size + self.top,
+                                      self.cell_size, self.cell_size), 0)
                 else:
-                    color = "black"
-                pygame.draw.rect(screen, pygame.Color(color),
-                                 (x * self.cell_size + self.left, y * self.cell_size + self.top,
-                                  self.cell_size, self.cell_size), 1)
+                    pygame.draw.rect(screen, pygame.Color("white"),
+                                     (x * self.cell_size + self.left, y * self.cell_size + self.top,
+                                      self.cell_size, self.cell_size), 1)
+
 
 
 def draw_intro_screen(screen, i):
@@ -91,19 +96,47 @@ def draw_start_game(screen):
     screen.fill((0, 0, 0))
     font = pygame.font.Font(None, 40)
 
-    level1 = font.render("Уровень 1 (Кабинет физики)", True, (0, 255, 0))
+    if current_level > 1:
+        status_1 = " [Пройдено]"
+    else:
+        status_1 = " [Не пройдено]"
+    level1 = font.render(f"Уровень 1 (Кабинет физики){status_1}", True, (0, 255, 0))
     w1, h1 = level1.get_width(), level1.get_height()
 
-    level2 = font.render("Уровень 2 (Кабинет информатики)", True, (0, 255, 0))
+    if current_level > 2:
+        status_2 = " [Пройдено]"
+    elif current_level == 2:
+        status_2 = " [Не пройдено]"
+    else:
+        status_2 = " [Недоступно]"
+    level2 = font.render(f"Уровень 2 (Кабинет информатики){status_2}", True, (0, 255, 0))
     w2, h2 = level2.get_width(), level2.get_height()
 
-    level3 = font.render("Уровень 3 (Кабинет математики)", True, (0, 255, 0))
+    if current_level > 3:
+        status_3 = " [Пройдено]"
+    elif current_level == 3:
+        status_3 = " [Не пройдено]"
+    else:
+        status_3 = " [Недоступно]"
+    level3 = font.render(f"Уровень 3 (Кабинет математики){status_3}", True, (0, 255, 0))
     w3, h3 = level3.get_width(), level3.get_height()
 
-    level4 = font.render("Уровень 4 (Кабинет русского)", True, (0, 255, 0))
+    if current_level > 4:
+        status_4 = " [Пройдено]"
+    elif current_level == 4:
+        status_4 = " [Не пройдено]"
+    else:
+        status_4 = " [Недоступно]"
+    level4 = font.render(f"Уровень 4 (Кабинет русского){status_4}", True, (0, 255, 0))
     w4, h4 = level4.get_width(), level4.get_height()
 
-    level5 = font.render("Уровень 5 (Коридор)", True, (0, 255, 0))
+    if current_level > 5:
+        status_5 = " [Пройдено]"
+    elif current_level == 5:
+        status_5 = " [Не пройдено]"
+    else:
+        status_5 = " [Недоступно]"
+    level5 = font.render(f"Уровень 5 (Коридор){status_5}", True, (0, 255, 0))
     w5, h5 = level5.get_width(), level5.get_height()
 
     x1 = width // 2 - w1 // 2
@@ -173,7 +206,7 @@ def level_1(screen):
     :return:
     """
     screen.fill((0, 0, 0))
-    board = Board("level_1.txt")
+    board = Board("data/level_1.txt")
     board.render(screen)
 
 
@@ -184,7 +217,7 @@ def level_2(screen):
         :return:
         """
     screen.fill((0, 0, 0))
-    board = Board()
+    board = Board("data/level_2.txt")
     board.render(screen)
 
 
@@ -195,7 +228,7 @@ def level_3(screen):
         :return:
         """
     screen.fill((0, 0, 0))
-    board = Board()
+    board = Board("data/level_3.txt")
     board.render(screen)
 
 
@@ -206,7 +239,7 @@ def level_4(screen):
         :return:
         """
     screen.fill((0, 0, 0))
-    board = Board()
+    board = Board("data/level_4.txt")
     board.render(screen)
 
 
@@ -217,8 +250,19 @@ def level_5(screen):
         :return:
         """
     screen.fill((0, 0, 0))
-    board = Board()
+    board = Board("data/level_5.txt")
     board.render(screen)
+
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join("data", name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    else:
+        image = pygame.image.load(fullname)
+        return image
+
 
 # Основа, так сказать, база, baseee
 if __name__ == '__main__':
@@ -278,23 +322,27 @@ if __name__ == '__main__':
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         num_of_screen = 2
-            elif num_of_screen == 5:
+                        current_level = 2
+            elif num_of_screen == 5: # Экран 2 уровня
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         num_of_screen = 2
-            elif num_of_screen == 6:
+                        current_level = 3
+            elif num_of_screen == 6: # Экран 3 уровня
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         num_of_screen = 2
-            elif num_of_screen == 7:
+                        current_level = 4
+            elif num_of_screen == 7: # Экран 4 уровня
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         num_of_screen = 2
-            elif num_of_screen == 8:
-
+                        current_level = 5
+            elif num_of_screen == 8: # Экран 5 уровня
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         num_of_screen = 2
+                        current_level = 6
 
         pygame.display.flip()
 
