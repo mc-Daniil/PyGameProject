@@ -2,11 +2,24 @@ import pygame
 
 
 class Board:
-    def __init__(self):
-        self.width = width
-        self.height = height
+    def __init__(self, f):
         self.cell_size = 50
+        self.board = list(open(f).readlines())
+        self.width = len(self.board[0]) - 1
+        self.height = len(self.board)
+        self.left = 0
+        self.top = 0
 
+    def render(self, screen):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.board[y][x] == "1":
+                    color = "white"
+                else:
+                    color = "black"
+                pygame.draw.rect(screen, pygame.Color(color),
+                                 (x * self.cell_size + self.left, y * self.cell_size + self.top,
+                                  self.cell_size, self.cell_size), 1)
 
 
 def draw_intro_screen(screen, i):
@@ -87,7 +100,7 @@ def draw_start_game(screen):
     level3 = font.render("Уровень 3 (Кабинет математики)", True, (0, 255, 0))
     w3, h3 = level3.get_width(), level3.get_height()
 
-    level4 = font.render("Уровень 4 (Кабинет русского языка)", True, (0, 255, 0))
+    level4 = font.render("Уровень 4 (Кабинет русского)", True, (0, 255, 0))
     w4, h4 = level4.get_width(), level4.get_height()
 
     level5 = font.render("Уровень 5 (Коридор)", True, (0, 255, 0))
@@ -145,33 +158,67 @@ def draw_how_to_play(screen):
     :param screen:
     :return:
     """
-    screen.fill((255, 0, 0))
+    screen.fill((0, 0, 0))
     font = pygame.font.Font(None, 30)
-    text = font.render("Итак, вы оказались в школе, из которой вам нужно сбежать", True, (0, 255, 0))
+    text = font.render("Вам нужно сбежать", True, (0, 255, 0))
     x = width // 2 - text.get_width() // 2
     y = height // 2 - text.get_height() // 2
     screen.blit(text, (x, y))
 
 
 def level_1(screen):
-    print("level 1")
+    """
+    Экран - 4. Рисует 1 уровень
+    :param screen:
+    :return:
+    """
+    screen.fill((0, 0, 0))
+    board = Board("level_1.txt")
+    board.render(screen)
 
 
 def level_2(screen):
-    print("level 2")
+    """
+        Экран - 5. Рисует 2 уровень
+        :param screen:
+        :return:
+        """
+    screen.fill((0, 0, 0))
+    board = Board()
+    board.render(screen)
 
 
 def level_3(screen):
-    print("level 3")
+    """
+        Экран - 6. Рисует 3 уровень
+        :param screen:
+        :return:
+        """
+    screen.fill((0, 0, 0))
+    board = Board()
+    board.render(screen)
 
 
 def level_4(screen):
-    print("level 4")
+    """
+        Экран - 7. Рисует 4 уровень
+        :param screen:
+        :return:
+        """
+    screen.fill((0, 0, 0))
+    board = Board()
+    board.render(screen)
 
 
 def level_5(screen):
-    print("level 5")
-
+    """
+        Экран - 8. Рисует 5 уровень
+        :param screen:
+        :return:
+        """
+    screen.fill((0, 0, 0))
+    board = Board()
+    board.render(screen)
 
 # Основа, так сказать, база, baseee
 if __name__ == '__main__':
@@ -191,7 +238,7 @@ if __name__ == '__main__':
                 draw_intro_screen(screen, num_start_screen)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     num_start_screen += 1
-            if num_of_screen == 1: # Стартовый экран
+            elif num_of_screen == 1: # Стартовый экран
                 x1, y1, w1, h1, x2, y2, w2, h2 = draw_start_screen(screen)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
@@ -199,7 +246,7 @@ if __name__ == '__main__':
                         num_of_screen = 2
                     elif x in range(x2, x2 + w2) and y in range(y2, y2 + h2):
                         num_of_screen = 3
-            if num_of_screen == 2: # Экран начать игру
+            elif num_of_screen == 2: # Экран начать игру
                 x1, y1, w1, h1, x2, y2, w2, h2, x3, y3, w3, h3, x4, y4, w4, h4, x5, y5, w5, h5 = draw_start_game(screen)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -208,20 +255,46 @@ if __name__ == '__main__':
                     x, y = event.pos
                     if x in range(x1, x1 + w1) and y in range(y1, y1 + h1):
                         level_1(screen)
-                    elif x in range(x2, x2 + w2) and y in range(y2, y2 + h2):
+                        num_of_screen = 4
+                    elif x in range(x2, x2 + w2) and y in range(y2, y2 + h2) and current_level == 2:
                         level_2(screen)
-                    elif x in range(x3, x3 + w3) and y in range(y3, y3 + h3):
+                        num_of_screen = 5
+                    elif x in range(x3, x3 + w3) and y in range(y3, y3 + h3) and current_level == 3:
+                        num_of_screen = 6
                         level_3(screen)
-                    elif x in range(x4, x4 + w4) and y in range(y4, y4 + h4):
+                    elif x in range(x4, x4 + w4) and y in range(y4, y4 + h4) and current_level == 4:
+                        num_of_screen = 7
                         level_4(screen)
-                    elif x in range(x5, x5 + w5) and y in range(y5, y5 + h5):
+                    elif x in range(x5, x5 + w5) and y in range(y5, y5 + h5) and current_level == 5:
+                        num_of_screen = 8
                         level_5(screen)
 
-            if num_of_screen == 3: # Экран как играть
+            elif num_of_screen == 3: # Экран как играть
                 draw_how_to_play(screen)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         num_of_screen = 1
+            elif num_of_screen == 4: # Экран 1 уровня
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        num_of_screen = 2
+            elif num_of_screen == 5:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        num_of_screen = 2
+            elif num_of_screen == 6:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        num_of_screen = 2
+            elif num_of_screen == 7:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        num_of_screen = 2
+            elif num_of_screen == 8:
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        num_of_screen = 2
 
         pygame.display.flip()
 
