@@ -28,6 +28,33 @@ def read_level(filename):
 
 
 def flood_fill(map_o, x, y, old, new):
+    """
+    Изменяет параметры при изменении персонажа на его координатах и соседних
+    """
+
+    if map_o[x][y] == old:
+        map_o[x][y] = new
+
+    if x < len(map_o) - 1 and map_o[x + 1][y] == old:
+        flood_fill(map_o, x + 1, y, old, new)  # Правая
+    if x > 0 and map_o[x - 1][y] == old:
+        flood_fill(map_o, x - 1, y, old, new)  # Левая
+    if y < len(map_o[x]) - 1 and map_o[x][y + 1] == old:
+        flood_fill(map_o, x, y + 1, old, new)  # Нижняя
+    if y > 0 and map_o[x][y - 1] == old:
+        flood_fill(map_o, x, y - 1, old, new)  # Верхняя
+
+
+def draw_map(map_o, state_o, goals):
+    """
+    Рисует уровень с игроком
+    :param map_o:
+    :param state_o:
+    :param goals:
+    :return:
+    """
+    map_width = len(map_o) * TILE_W
+    map_height = len(map_o[0] - 1) * TILE_FH + TILE_H
 
 
 def decorate_map(map_o, start_x_y):
@@ -50,11 +77,11 @@ def decorate_map(map_o, start_x_y):
                 map_o_copy[x][y] = " "
 
 
-
 def run_level(levels, current_level):
     global current_image
     level = levels[current_level]
     map_o = decorate_map()
+
 
 if __name__ == '__main__':
 
